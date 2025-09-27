@@ -12,14 +12,12 @@ namespace Entities.Post
     public class Category : BaseEntity
     {
         #region Properties
+
         [Required]
-        [StringLength(100)]
+        [StringLength(50)]
         public string Name { get; set; }
         public int? ParentCategoryId { get; set; }
 
-
-        #endregion
-        #region Relations    
         [ForeignKey(nameof(ParentCategoryId))]
         public Category ParentCategory { get; set; }
         public ICollection<Category> ChildCategories { get; set; }

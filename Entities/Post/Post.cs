@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,19 +14,13 @@ namespace Entities.Post
 {
     public class Post : BaseEntity<Guid>
     {
-        #region Properties
         public string Title { get; set; }
         public string Description { get; set; }
         public int CategoryId { get; set; }
         public int AuthorId { get; set; }
-        #endregion
-
-        #region Relations
 
         public Category Category { get; set; }
         public User.User Author { get; set; }
-        #endregion
-
     }
 
     public class PostConfiguration : IEntityTypeConfiguration<Post>

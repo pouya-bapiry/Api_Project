@@ -10,11 +10,11 @@ namespace Entities.User
 {
     public class User : BaseEntity
     {
-        #region Properties
         public User()
         {
             IsActive = true;
         }
+
         [Required]
         [StringLength(100)]
         public string UserName { get; set; }
@@ -27,21 +27,17 @@ namespace Entities.User
         public int Age { get; set; }
         public GenderType Gender { get; set; }
         public bool IsActive { get; set; }
-        public DateTimeOffset LoginDate { get; set; }
+        public DateTimeOffset? LastLoginDate { get; set; }
 
-
-        #endregion
-
-        #region Relation
-
-       public ICollection<Post.Post> Posts { get; set; } 
-
-        #endregion
-
+        public ICollection<Post.Post> Posts { get; set; }
     }
+
     public enum GenderType
     {
-        [Display(Name = "مرد")] Male = 1,
-        [Display(Name = "زن")] Female = 2
+        [Display(Name = "مرد")]
+        Male = 1,
+
+        [Display(Name = "زن")]
+        Female = 2
     }
 }
