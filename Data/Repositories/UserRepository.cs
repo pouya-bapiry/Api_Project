@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Data.Repositories
 {
-    public class UserRepository : Repository<User>
+    public class UserRepository : Repository<User>, IUserRepository
     {
         public UserRepository(ApplicationDbContext dbContext) : base(dbContext)
         {
@@ -17,7 +17,7 @@ namespace Data.Repositories
 
         public Task<User> GetByUserAndPass(string username, string password,CancellationToken cancellationToken)
         {
-            var passwordHash=SecurityHelper.GetSha256Hash(password)
+            var passwordHash = SecurityHelper.GetSha256Hash(password);
             return  Table.Where(p => p.UserName == username && p.PasswordHash == passwordHash)
                 .SingleOrDefaultAsync(cancellationToken);
         }   

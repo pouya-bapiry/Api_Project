@@ -10,10 +10,7 @@ namespace Entities.User
 {
     public class User : BaseEntity
     {
-        public User()
-        {
-            IsActive = true;
-        }
+      
 
         [Required]
         [StringLength(100)]
