@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Threading;
+using WebFramework.Api;
+using WebFramework.Filters;
 
 namespace MyApi.Controllers
 {
@@ -26,28 +28,51 @@ namespace MyApi.Controllers
         #region Methods
 
         [HttpGet]
-        public async Task<List<User>> Get()
+       [ApiResultFilter]
+        public async Task<ActionResult<List<User>>> Get()
         {
             var users = await userRepository.TableNoTracking.ToListAsync();
-            return users;
+            return BadRequest(users);
+            //return new ApiResult<List<User>>
+            //{
+            //    IsSuccess = true,
+            //    StatusCode = 0,
+            //    Message = "عملیت با موفقیت انجام شد",
+            //    Data = users
+            //};
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<User>> Get(int id,CancellationToken cancellationToken)
+        [HttpGet("{id:int}")]
+        public async Task<ApiResult<User>> Get(int id, CancellationToken cancellationToken)
         {
             var user = await userRepository.GetByIdAsync(cancellationToken, id);
-            return (user);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return user;
+
+
+            //return new ApiResult<User>
+            //{
+            //    IsSuccess = true,
+            //    StatusCode = 0,
+            //    Message = "عملیت با موفقیت انجام شد",
+            //    Data = user
+            //};
         }
 
         [HttpPost]
-        public async Task Create(User user, CancellationToken cancellationToken)
+        public async Task<ApiResult<User>> Create(User user, CancellationToken cancellationToken)
         {
             await userRepository.AddAsync(user, cancellationToken);
 
+            return Ok(user);
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update(int id, User user, CancellationToken cancellationToken)
+        public async Task<ApiResult> Update(int id, User user, CancellationToken cancellationToken)
         {
             var updateUser = await userRepository.GetByIdAsync(cancellationToken, id);
 
@@ -60,16 +85,27 @@ namespace MyApi.Controllers
             updateUser.LastLoginDate = user.LastLoginDate;
 
             await userRepository.UpdateAsync(updateUser, cancellationToken);
-
-            return Ok();
+            return new ApiResult(true, ApiResultStatusCode.Success);
+            //return new ApiResult
+            //{
+            //    IsSuccess = true,
+            //    StatusCode = 0,
+            //    Message = "عملیت با موفقیت انجام شد",
+            //};
         }
 
         [HttpDelete]
-        public async Task<ActionResult> Delete(int id, CancellationToken cancellationToken)
+        public async Task<ApiResult> Delete(int id, CancellationToken cancellationToken)
         {
             var user = await userRepository.GetByIdAsync(cancellationToken, id);
             await userRepository.DeleteAsync(user, cancellationToken);
-            return Ok();
+            return new ApiResult(true, ApiResultStatusCode.Success);
+            //return new ApiResult
+            //{
+            //    IsSuccess = true,
+            //    StatusCode = 0,
+            //    Message = "عملیت با موفقیت انجام شد",
+            //};
         }
         #endregion
 
