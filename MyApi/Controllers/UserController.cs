@@ -4,13 +4,15 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Threading;
+using MyApi.Models;
 using WebFramework.Api;
 using WebFramework.Filters;
 
 namespace MyApi.Controllers
 {
-    [ApiController]
     [Route("api/[controller]")]
+    [ApiResultFilter]
+    [ApiController]
 
     public class UserController : ControllerBase
     {
@@ -28,7 +30,7 @@ namespace MyApi.Controllers
         #region Methods
 
         [HttpGet]
-       [ApiResultFilter]
+        [ApiResultFilter]
         public async Task<ActionResult<List<User>>> Get()
         {
             var users = await userRepository.TableNoTracking.ToListAsync();
@@ -64,11 +66,21 @@ namespace MyApi.Controllers
         }
 
         [HttpPost]
-        public async Task<ApiResult<User>> Create(User user, CancellationToken cancellationToken)
+        public async Task<ApiResult<User>> Create(UserDto userDto, CancellationToken cancellationToken)
         {
-            await userRepository.AddAsync(user, cancellationToken);
+            var exists = await userRepository.TableNoTracking.AnyAsync(p => p.UserName == userDto.UserName);
+            if (exists)
+                return BadRequest("نام کاربری تکراری است");
 
-            return Ok(user);
+            var user = new User
+            {
+                Age = userDto.Age,
+                FullName = userDto.FullName,
+                Gender = userDto.Gender,
+                UserName = userDto.UserName
+            };
+            await userRepository.AddAsync(user, userDto.Password, cancellationToken);
+            return user;
         }
 
         [HttpPut]

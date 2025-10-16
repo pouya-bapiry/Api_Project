@@ -30,7 +30,7 @@ namespace Data.Repositories
         #region Async Method
         public virtual async Task<TEntity> GetByIdAsync(CancellationToken cancellationToken, params object[] ids)
         {
-            return await  Entities.FindAsync(ids, cancellationToken);
+            return await Entities.FindAsync(ids, cancellationToken);
         }
         //public virtual Task<TEntity> GetByIdAsync(CancellationToken cancellationToken, params object[] ids)
         //{

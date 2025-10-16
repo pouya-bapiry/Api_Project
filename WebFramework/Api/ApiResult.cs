@@ -3,17 +3,21 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Common.Utilities;
 using Microsoft.OpenApi.Attributes;
+using Newtonsoft.Json;
 using Services;
 
 namespace WebFramework.Api
 {
     public class ApiResult
     {
+        
         public bool IsSuccess { get; set; }
         public ApiResultStatusCode StatusCode { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Message { get; set; }
 
         public ApiResult(bool isSuccess,ApiResultStatusCode statusCode,string message=null)
@@ -61,8 +65,8 @@ namespace WebFramework.Api
         where TData : class
 
     {
-      
 
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public TData Data { get; set; }
         
 

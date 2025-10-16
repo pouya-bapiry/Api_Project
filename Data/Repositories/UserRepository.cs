@@ -1,11 +1,13 @@
-﻿using System;
+﻿using Common.Utilities;
+using Data.Contracts;
+using Entities.User;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Common.Utilities;
-using Entities.User;
-using Microsoft.EntityFrameworkCore;
 
 namespace Data.Repositories
 {
@@ -15,11 +17,20 @@ namespace Data.Repositories
         {
         }
 
-        public Task<User> GetByUserAndPass(string username, string password,CancellationToken cancellationToken)
+        public Task<User> GetByUserAndPass(string username, string password, CancellationToken cancellationToken)
         {
             var passwordHash = SecurityHelper.GetSha256Hash(password);
-            return  Table.Where(p => p.UserName == username && p.PasswordHash == passwordHash)
+            return Table.Where(p => p.UserName == username && p.PasswordHash == passwordHash)
                 .SingleOrDefaultAsync(cancellationToken);
-        }   
+        }
+
+
+        public async Task AddAsync(User user, string password, CancellationToken cancellationToken)
+        {
+
+            var passwordHash = SecurityHelper.GetSha256Hash(password);
+            user.PasswordHash = passwordHash;
+            await base.AddAsync(user, cancellationToken);
+        }
     }
 }
