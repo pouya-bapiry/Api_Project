@@ -1,5 +1,6 @@
 using Data;
 using Microsoft.EntityFrameworkCore;
+using WebFramework.Middlewares;
 
 namespace MyApi
 {
@@ -23,9 +24,14 @@ namespace MyApi
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseMiddleware<CustomExceptionHandlerMiddlewear>();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseHsts();
             }
 
             app.UseHttpsRedirection();

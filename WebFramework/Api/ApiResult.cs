@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Common;
 using Common.Utilities;
 using Microsoft.OpenApi.Attributes;
 using Newtonsoft.Json;
@@ -14,17 +15,17 @@ namespace WebFramework.Api
 {
     public class ApiResult
     {
-        
         public bool IsSuccess { get; set; }
         public ApiResultStatusCode StatusCode { get; set; }
+
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Message { get; set; }
 
-        public ApiResult(bool isSuccess,ApiResultStatusCode statusCode,string message=null)
+        public ApiResult(bool isSuccess, ApiResultStatusCode statusCode, string message = null)
         {
             IsSuccess = isSuccess;
             StatusCode = statusCode;
-            Message = message?? statusCode.ToDisplay();
+            Message = message ?? statusCode.ToDisplay();
         }
 
         #region Implicit Operators
@@ -63,17 +64,14 @@ namespace WebFramework.Api
 
     public class ApiResult<TData> : ApiResult
         where TData : class
-
     {
-
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public TData Data { get; set; }
-        
 
-        public ApiResult(bool isSuccess, ApiResultStatusCode statusCode,TData data ,string message = null)
-        :base(isSuccess,statusCode,message)
+        public ApiResult(bool isSuccess, ApiResultStatusCode statusCode, TData data, string message = null)
+            : base(isSuccess, statusCode, message)
         {
-           Data=data;
+            Data = data;
         }
 
         #region Implicit Operators
@@ -123,27 +121,28 @@ namespace WebFramework.Api
             return new ApiResult<TData>(false, ApiResultStatusCode.NotFound, (TData)result.Value);
         }
         #endregion
-
     }
 
-
-
-    public enum ApiResultStatusCode
-    {
-        [Display(name:"عملیت با مئفقیت انجام شد")]
-        Success = 0,
-        [Display(name: "خطایی در سرور رخ داده است")]
-
-        ServerError = 1,
-        [Display(name: "پرارمتر های ارسالی معتبر نیستند")]
-
-        BadRequest = 2,
-        [Display(name: "یافت نشد")]
-
-        NotFound = 3,
-        [Display(name: "لیست خالی است")]
-
-        ListEmpty = 4
-
-    }
 }
+
+
+
+//public enum ApiResultStatusCode
+    //{
+    //    [Display(name:"عملیت با مئفقیت انجام شد")]
+    //    Success = 0,
+    //    [Display(name: "خطایی در سرور رخ داده است")]
+
+//    ServerError = 1,
+//    [Display(name: "پرارمتر های ارسالی معتبر نیستند")]
+
+//    BadRequest = 2,
+//    [Display(name: "یافت نشد")]
+
+//    NotFound = 3,
+//    [Display(name: "لیست خالی است")]
+
+//    ListEmpty = 4
+
+//}
+
